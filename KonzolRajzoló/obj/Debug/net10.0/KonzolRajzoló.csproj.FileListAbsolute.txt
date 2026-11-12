@@ -1,0 +1,14 @@
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\bin\Debug\net10.0\KonzolRajzoló.exe
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\bin\Debug\net10.0\KonzolRajzoló.deps.json
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\bin\Debug\net10.0\KonzolRajzoló.runtimeconfig.json
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\bin\Debug\net10.0\KonzolRajzoló.dll
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\bin\Debug\net10.0\KonzolRajzoló.pdb
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.AssemblyInfoInputs.cache
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.AssemblyInfo.cs
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.csproj.CoreCompileInputs.cache
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.dll
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\refint\KonzolRajzoló.dll
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.pdb
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\KonzolRajzoló.genruntimeconfig.cache
+C:\Users\ungai.zoltan\source\repos\KonzolRajzoló\KonzolRajzoló\obj\Debug\net10.0\ref\KonzolRajzoló.dll
