@@ -2,22 +2,28 @@
 
 ## Csapat és munkamegosztás
 
-| Név vagy GitHub-felhasználónév | Vállalt feladatok és szerep | Saját menüfunkció |
-| --- | --- | --- |
-| … | … | … |
-| … | … | … |
+Név vagy GitHub-felhasználónév: Ungai Zoltán - UngaiZoltan
+								Porkoláb Ferenc - FRXTSY
+
+Vállalt feladatok és szerep: Ungai Zoltán:
+							 Porkoláb Ferenc:
+
+Saját menüfunkció:  Ungai Zoltán:
+					Porkoláb Ferenc:
 
 ## Közös megállapodások
 
-- A rajzlap mérete és helye: …
+- A rajzlap mérete és helye: teljes képernyő, középen
 - A két munkarész kapcsolódási pontja: …
 - A módosítások egyeztetése a main ágon: …
 
 ## Munkanapló
 
-| Dátum | Ki | Mi készült el vagy miben állapodtunk meg? | Következő lépés vagy commit |
-| --- | --- | --- | --- |
-| … | … | … | … |
+Commit 1:
+	Dátum: 2026.11.12
+	Ki készítette: Ungai Zoltán
+	Mi készült el: Kurzor jele (char), rajz jele (char), rajzol (bool) létrehozása, és fájlok feltöltése a repositoryba
+	Következő lépés: Menü és UI elkészítése
 
 ## Másik pár tesztje
 
