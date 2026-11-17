@@ -1,34 +1,39 @@
-﻿namespace KonzolRajzoló
+﻿namespace KonzolosRajzolo
 {
-    internal class Program
+    class Program
     {
-        static void Main(string[] args)
+        // rajzlap méretei
+
+        const int RajzlapSzelesseg = 60;
+        const int RajzlapMagassag = 25;
+
+        // vizuális szélei a rajzlapnak x,y tengelyen
+
+        const int RajzlapKezdoX = 28;
+        const int RajzlapKezdoY = 2;
+
+        static void Main()
         {
-            Console.CursorVisible = false;
-            Console.SetWindowSize(1920, 1080);
+            // megnézi hogy lehet-e ekkorára állítani
 
+            try
+            {
 
-            char kurzorJel = '+';
-            char rajzJel = '■';
-            bool rajzol = false;
-            string szin = "red";
+                if (Console.WindowWidth < 92)
+                {
+                    Console.WindowWidth = 92;
+                }
 
-            Console.BackgroundColor = ConsoleColor.Red;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Cső");
+                if (Console.WindowHeight < 30)
+                {
+                    Console.WindowHeight = 30;
+                }
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-            //switch (keyInfo.Key)
-            //{
-            //    case ConsoleKey.Spacebar:
-
-
-            //    default:
-            //}
-
-
-
+            }
+            catch 
+            {
+            
+            }
         }
     }
 }
