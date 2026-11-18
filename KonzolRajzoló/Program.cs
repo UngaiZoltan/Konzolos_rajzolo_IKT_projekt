@@ -16,6 +16,7 @@ namespace KonzolosRajzolo
             "Karakter választása",
             "Szín választása",
             "Minta betöltése fájlból",
+            "Szabadkézi rajzolás",
             "PLACEHOLDER 1",
             "PLACEHOLDER 2",
             "Kilépés"
@@ -29,7 +30,6 @@ namespace KonzolosRajzolo
 
         static void Main()
         {
-            // megnézi hogy lehet-e ekkorára állítani
             try
             {
                 if (Console.WindowWidth < 92)
@@ -48,21 +48,18 @@ namespace KonzolosRajzolo
 
             Console.CursorVisible = false;
 
-            // Egyszer kirajzoljuk a teljes felületet indításkor
             TeljesKepernyoRajzolasa();
 
             bool fut = true;
 
             while (fut)
             {
-                // Státusz kiírása a bal oldalra
                 Console.SetCursorPosition(0, 10);
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write($"Karakter: {aktualisKarakter}   ");
                 Console.SetCursorPosition(0, 11);
                 Console.Write($"Szín: {aktualisSzin}      ");
 
-                // Menü kirajzolása minden lépésben, hogy látszódjon a sárga nyíl
                 MenuKirajzolasa();
 
                 ConsoleKeyInfo bekertBillentyu = Console.ReadKey(true);
@@ -84,7 +81,6 @@ namespace KonzolosRajzolo
                             kivalasztottMenuIdx = 0;
                         }
                         break;
-
                     case ConsoleKey.Enter:
                         if (kivalasztottMenuIdx == 0)
                         {
@@ -104,14 +100,19 @@ namespace KonzolosRajzolo
                         else if (kivalasztottMenuIdx == 3)
                         {
                             Console.SetCursorPosition(0, 16);
-                            Console.Write("egyéni funkció 1                  ");
+                            SzabadkeziRajzolas();
                         }
                         else if (kivalasztottMenuIdx == 4)
                         {
                             Console.SetCursorPosition(0, 16);
-                            Console.Write("egyéni funkció 2                  ");
+                            Console.Write("egyéni funkció 1");
                         }
                         else if (kivalasztottMenuIdx == 5)
+                        {
+                            Console.SetCursorPosition(0, 16);
+                            Console.Write("egyéni funkció 2");
+                        }
+                        else if (kivalasztottMenuIdx == menuPontok.Length - 1)
                         {
                             fut = false;
                         }
@@ -194,7 +195,7 @@ namespace KonzolosRajzolo
             }
             else
             {
-                Console.Beep(100, 750);
+                Console.Beep();
                 Console.SetCursorPosition(0, 16);
                 Console.Write(new string(' ', 40));
                 Console.SetCursorPosition(0, 16);
@@ -240,13 +241,12 @@ namespace KonzolosRajzolo
                     Console.Write("Szín frissítve: Sárga");
                     return ConsoleColor.Yellow;
                 default:
-                    Console.Beep(100, 750);
+                    Console.Beep();
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("Érvénytelen szín választás!");
                     return aktualisSzin;
             }
         }
-
         static void MintaBetoltese()
         {
             Console.SetCursorPosition(0, 16);
@@ -267,13 +267,11 @@ namespace KonzolosRajzolo
                 {
                     string[] sorok = System.IO.File.ReadAllLines(fajlNev);
 
-                    // --- ITT RAJZOLJUK KI A SOROKat A RAJZLAPRA ---
                     for (int y = 0; y < sorok.Length && y < RajzlapMagassag; y++)
                     {
                         Console.SetCursorPosition(RajzlapKezdoX, RajzlapKezdoY + y);
 
                         string sor = sorok[y];
-                        // Ha hosszabb a sor, mint a rajzlap, levágjuk
                         if (sor.Length > RajzlapSzelesseg)
                         {
                             sor = sor.Substring(0, RajzlapSzelesseg);
@@ -284,7 +282,7 @@ namespace KonzolosRajzolo
                     }
                     Console.SetCursorPosition(0, 16);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"Sikeres betöltés! ({sorok.Length} sor)     ");
+                    Console.Write($"Sikeres betöltés! ({sorok.Length} sor)");
 
                 }
                 catch (Exception ex)
@@ -301,6 +299,76 @@ namespace KonzolosRajzolo
                 Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("A megadott fájl nem található!");
+            }
+        }
+
+        static void SzabadkeziRajzolas()
+        {
+            // Kezdeti pozíció a rajzlap bal felső sarka
+            int kurzorX = RajzlapKezdoX;
+            int kurzorY = RajzlapKezdoY;
+            bool ceruzaLent = false; // Kezdetben felemelve
+
+            Console.SetCursorPosition(0, 16);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Rajz mód: Nyilak=Mozgás, Space=Fel/Le, Esc=Kilépés");
+
+            while (true)
+            {
+                // Állapot kiírása a bal oldalra (hogy lássuk a koordinátákat és a ceruza állapotát)
+                int relX = kurzorX - RajzlapKezdoX;
+                int relY = kurzorY - RajzlapKezdoY;
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.SetCursorPosition(0, 10);
+                Console.Write($"Koordináta: X:{relX,2} Y:{relY,2}");
+                Console.SetCursorPosition(0, 13);
+                Console.ForegroundColor = ceruzaLent ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.Write($"Eszköz:     {(ceruzaLent ? "LETÉVE" : "FELEMELVE")}");
+
+                // Kurzor pozicionálása és láthatóvá tétele
+                Console.SetCursorPosition(kurzorX, kurzorY);
+                Console.CursorVisible = true;
+
+                ConsoleKeyInfo gomb = Console.ReadKey(true);
+
+                // Ha a ceruza lent van, mozgás előtt/közben beírja a karaktert
+                if (ceruzaLent)
+                {
+                    Console.SetCursorPosition(kurzorX, kurzorY);
+                    Console.ForegroundColor = aktualisSzin;
+                    Console.Write(aktualisKarakter);
+                }
+
+                switch (gomb.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (kurzorY > RajzlapKezdoY) kurzorY--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (kurzorY < RajzlapKezdoY + RajzlapMagassag - 1) kurzorY++;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        if (kurzorX > RajzlapKezdoX) kurzorX--;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (kurzorX < RajzlapKezdoX + RajzlapSzelesseg - 1) kurzorX++;
+                        break;
+                    case ConsoleKey.Spacebar:
+                        ceruzaLent = !ceruzaLent; // Állapot váltás (fel / le)
+                        if (ceruzaLent)
+                        {
+                            Console.SetCursorPosition(kurzorX, kurzorY);
+                            Console.ForegroundColor = aktualisSzin;
+                            Console.Write(aktualisKarakter);
+                        }
+                        break;
+                    case ConsoleKey.Escape:
+                        Console.CursorVisible = false;
+                        Console.SetCursorPosition(0, 16);
+                        Console.Write(new string(' ', 50));
+                        return; // Kilépés a főmenübe
+                }
             }
         }
     }
