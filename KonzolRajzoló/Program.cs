@@ -6,7 +6,6 @@ namespace KonzolosRajzolo
     {
         // rajzlap méretei
         const int RajzlapSzelesseg = 80;
-        const int RajzlapSzelesseg = 60;
         const int RajzlapMagassag = 25;
 
         // vizuális szélei a rajzlapnak x,y tengelyen
@@ -78,6 +77,7 @@ namespace KonzolosRajzolo
 
                     case ConsoleKey.Enter:
                         if (kivalasztottMenuIdx == 0)
+                        { 
                             Console.SetCursorPosition(0, 16);
                             aktualisKarakter = KarakterValasztasa();
                             Console.WriteLine("karakter választása függvény");
@@ -185,19 +185,17 @@ namespace KonzolosRajzolo
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($"Karakter frissítve: {betuInfo.KeyChar}");
 
-                // Visszaadjuk a megadott karaktert a Main-nek, hogy elmenthesse
                 return betuInfo.KeyChar;
             }
             else
             {
-                Console.Beep(); // Hiba jelzése hanggal
+                Console.Beep();
                 Console.SetCursorPosition(0, 16);
                 Console.Write(new string(' ', 40));
                 Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("Érvénytelen karakter!");
 
-                // Ha hibás volt, vissadjuk a jelenlegi karaktert, hogy ne változzon meg
                 return aktualisKarakter;
                 }
             }
