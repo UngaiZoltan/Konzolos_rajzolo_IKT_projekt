@@ -99,7 +99,7 @@ namespace KonzolosRajzolo
                         else if (kivalasztottMenuIdx == 2)
                         {
                             Console.SetCursorPosition(0, 16);
-                            Console.Write("minta betöltése függvény          ");
+                            MintaBetoltese();
                         }
                         else if (kivalasztottMenuIdx == 3)
                         {
@@ -244,6 +244,63 @@ namespace KonzolosRajzolo
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("Érvénytelen szín választás!");
                     return aktualisSzin;
+            }
+        }
+
+        static void MintaBetoltese()
+        {
+            Console.SetCursorPosition(0, 16);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Add meg a fájl nevét (pl. minta.txt): ");
+
+            Console.CursorVisible = true;
+            string fajlNev = Console.ReadLine();
+            Console.CursorVisible = false;
+
+            Console.SetCursorPosition(0, 16);
+            Console.Write(new string(' ', 50));
+            Console.SetCursorPosition(0, 16);
+
+            if (System.IO.File.Exists(fajlNev))
+            {
+                try
+                {
+                    string[] sorok = System.IO.File.ReadAllLines(fajlNev);
+
+                    // --- ITT RAJZOLJUK KI A SOROKat A RAJZLAPRA ---
+                    for (int y = 0; y < sorok.Length && y < RajzlapMagassag; y++)
+                    {
+                        Console.SetCursorPosition(RajzlapKezdoX, RajzlapKezdoY + y);
+
+                        string sor = sorok[y];
+                        // Ha hosszabb a sor, mint a rajzlap, levágjuk
+                        if (sor.Length > RajzlapSzelesseg)
+                        {
+                            sor = sor.Substring(0, RajzlapSzelesseg);
+                        }
+
+                        Console.ForegroundColor = aktualisSzin;
+                        Console.Write(sor);
+                    }
+                    Console.SetCursorPosition(0, 16);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"Sikeres betöltés! ({sorok.Length} sor)     ");
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Beep();
+                    Console.SetCursorPosition(0, 16);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("Hiba történt a fájl olvasásakor!");
+                }
+            }
+            else
+            {
+                Console.Beep();
+                Console.SetCursorPosition(0, 16);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("A megadott fájl nem található!");
             }
         }
     }
