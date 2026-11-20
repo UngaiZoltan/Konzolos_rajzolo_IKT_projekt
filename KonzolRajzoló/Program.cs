@@ -17,8 +17,6 @@ namespace KonzolosRajzolo
             "Szín választása",
             "Minta betöltése fájlból",
             "Szabadkézi rajzolás",
-            "PLACEHOLDER 1",
-            "PLACEHOLDER 2",
             "Kilépés"
         };
 
@@ -92,6 +90,7 @@ namespace KonzolosRajzolo
                             kivalasztottMenuIdx = 0;
                         }
                         break;
+
                     case ConsoleKey.Enter:
                         if (kivalasztottMenuIdx == 0)
                         {
@@ -112,16 +111,6 @@ namespace KonzolosRajzolo
                         {
                             Console.SetCursorPosition(0, 16);
                             SzabadkeziRajzolas();
-                        }
-                        else if (kivalasztottMenuIdx == 4)
-                        {
-                            Console.SetCursorPosition(0, 16);
-                            Console.Write("egyéni funkció 1");
-                        }
-                        else if (kivalasztottMenuIdx == 5)
-                        {
-                            Console.SetCursorPosition(0, 16);
-                            Console.Write("egyéni funkció 2");
                         }
                         else if (kivalasztottMenuIdx == menuPontok.Length - 1)
                         {
@@ -188,7 +177,8 @@ namespace KonzolosRajzolo
         {
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Add meg az új rajzkaraktert: ");
+            Console.Write("Új rajzkarakter:           ");
+            Console.SetCursorPosition(17, 16);
 
             Console.CursorVisible = true;
             ConsoleKeyInfo betuInfo = Console.ReadKey(false);
@@ -197,10 +187,8 @@ namespace KonzolosRajzolo
             if (!char.IsControl(betuInfo.KeyChar))
             {
                 Console.SetCursorPosition(0, 16);
-                Console.Write(new string(' ', 40));
-                Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"Karakter frissítve: {betuInfo.KeyChar}");
+                Console.Write($"Karakter: {betuInfo.KeyChar}                ");
 
                 return betuInfo.KeyChar;
             }
@@ -208,10 +196,8 @@ namespace KonzolosRajzolo
             {
                 Console.Beep();
                 Console.SetCursorPosition(0, 16);
-                Console.Write(new string(' ', 40));
-                Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("Érvénytelen karakter!");
+                Console.Write("Érvénytelen karakter!      ");
 
                 return aktualisKarakter;
             }
@@ -221,35 +207,39 @@ namespace KonzolosRajzolo
         {
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Szín (1:Fehér, 2:Piros, 3:Zöld, 4:Kék, 5:Sárga): ");
+            Console.Write("1:Feh 2:Pir 3:Zöl        ");
+            Console.SetCursorPosition(0, 17);
+            Console.Write("4:Kék 5:Sár              ");
 
             ConsoleKeyInfo gomb = Console.ReadKey(true);
 
             Console.SetCursorPosition(0, 16);
-            Console.Write(new string(' ', 50));
+            Console.Write(new string(' ', 27));
+            Console.SetCursorPosition(0, 17);
+            Console.Write(new string(' ', 27));
             Console.SetCursorPosition(0, 16);
 
             switch (gomb.KeyChar)
             {
                 case '1':
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Szín frissítve: Fehér");
+                    Console.Write("Szín: Fehér                ");
                     return ConsoleColor.White;
                 case '2':
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Szín frissítve: Piros");
+                    Console.Write("Szín: Piros                ");
                     return ConsoleColor.Red;
                 case '3':
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Szín frissítve: Zöld");
+                    Console.Write("Szín: Zöld                 ");
                     return ConsoleColor.Green;
                 case '4':
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Szín frissítve: Kék");
+                    Console.Write("Szín: Kék                  ");
                     return ConsoleColor.Blue;
                 case '5':
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Szín frissítve: Sárga");
+                    Console.Write("Szín: Sárga                ");
                     return ConsoleColor.Yellow;
                 default:
                     Console.Beep();
@@ -258,18 +248,22 @@ namespace KonzolosRajzolo
                     return aktualisSzin;
             }
         }
+
         static void MintaBetoltese()
         {
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Add meg a fájl nevét (pl. minta.txt): ");
+            Console.Write("Fájlnév (pl. minta.txt):   ");
+            Console.SetCursorPosition(0, 17);
 
             Console.CursorVisible = true;
             string fajlNev = Console.ReadLine();
             Console.CursorVisible = false;
 
             Console.SetCursorPosition(0, 16);
-            Console.Write(new string(' ', 50));
+            Console.Write(new string(' ', 27));
+            Console.SetCursorPosition(0, 17);
+            Console.Write(new string(' ', 27));
             Console.SetCursorPosition(0, 16);
 
             if (System.IO.File.Exists(fajlNev))
@@ -293,15 +287,14 @@ namespace KonzolosRajzolo
                     }
                     Console.SetCursorPosition(0, 16);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"Sikeres betöltés! ({sorok.Length} sor)");
-
+                    Console.Write($"Betöltve: {sorok.Length} sor          ");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Console.Beep();
                     Console.SetCursorPosition(0, 16);
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Hiba történt a fájl olvasásakor!");
+                    Console.Write("Hiba a fájl olvasásakor!  ");
                 }
             }
             else
@@ -309,7 +302,7 @@ namespace KonzolosRajzolo
                 Console.Beep();
                 Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("A megadott fájl nem található!");
+                Console.Write("A fájl nem található!      ");
             }
         }
 
@@ -321,7 +314,9 @@ namespace KonzolosRajzolo
 
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Nyilak=Mozg, Space=Fel/Le, R=Rainbow, Esc=Kilép   ");
+            Console.Write("Nyilak=Mozg, Space=Fel/Le");
+            Console.SetCursorPosition(0, 17);
+            Console.Write("R=Rainbow,   Esc=Kilép   ");
 
             while (true)
             {
@@ -336,7 +331,7 @@ namespace KonzolosRajzolo
                 Console.Write($"Eszköz:     {(ceruzaLent ? "LETÉVE   " : "FELEMELVE")}");
                 Console.SetCursorPosition(0, 14);
                 Console.ForegroundColor = rainbowMode ? ConsoleColor.Magenta : ConsoleColor.Gray;
-                Console.Write($"Rainbow:    {(rainbowMode ? "BE " : "KI ")}");
+                Console.Write($"Rainbow:    {(rainbowMode ? "BE      " : "KI      ")}");
 
                 Console.SetCursorPosition(kurzorX, kurzorY);
                 Console.CursorVisible = true;
@@ -373,9 +368,11 @@ namespace KonzolosRajzolo
                     case ConsoleKey.Escape:
                         Console.CursorVisible = false;
                         Console.SetCursorPosition(0, 14);
-                        Console.Write("Fel/Le: választás ");
+                        Console.Write("Fel/Le: választás       ");
                         Console.SetCursorPosition(0, 16);
-                        Console.Write(new string(' ', 55));
+                        Console.Write(new string(' ', 27));
+                        Console.SetCursorPosition(0, 17);
+                        Console.Write(new string(' ', 27));
                         return;
                 }
 
