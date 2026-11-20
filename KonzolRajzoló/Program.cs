@@ -22,6 +22,17 @@ namespace KonzolosRajzolo
             "Kilépés"
         };
 
+        static bool rainbowMode = false;
+        static int szinIdx = 0;
+        static ConsoleColor[] szivarvanySzinek = {
+            ConsoleColor.Red,
+            ConsoleColor.Yellow,
+            ConsoleColor.Green,
+            ConsoleColor.Cyan,
+            ConsoleColor.Blue,
+            ConsoleColor.Magenta
+        };
+
         // aktuális rajzkarakter és szín
         static char aktualisKarakter = '#';
         static ConsoleColor aktualisSzin = ConsoleColor.White;
@@ -304,18 +315,16 @@ namespace KonzolosRajzolo
 
         static void SzabadkeziRajzolas()
         {
-            // Kezdeti pozíció a rajzlap bal felső sarka
             int kurzorX = RajzlapKezdoX;
             int kurzorY = RajzlapKezdoY;
-            bool ceruzaLent = false; // Kezdetben felemelve
+            bool ceruzaLent = false;
 
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Rajz mód: Nyilak=Mozgás, Space=Fel/Le, Esc=Kilépés");
+            Console.Write("Nyilak=Mozg, Space=Fel/Le, R=Rainbow, Esc=Kilép   ");
 
             while (true)
             {
-                // Állapot kiírása a bal oldalra (hogy lássuk a koordinátákat és a ceruza állapotát)
                 int relX = kurzorX - RajzlapKezdoX;
                 int relY = kurzorY - RajzlapKezdoY;
 
@@ -324,52 +333,71 @@ namespace KonzolosRajzolo
                 Console.Write($"Koordináta: X:{relX,2} Y:{relY,2}");
                 Console.SetCursorPosition(0, 13);
                 Console.ForegroundColor = ceruzaLent ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.Write($"Eszköz:     {(ceruzaLent ? "LETÉVE" : "FELEMELVE")}");
+                Console.Write($"Eszköz:     {(ceruzaLent ? "LETÉVE   " : "FELEMELVE")}");
+                Console.SetCursorPosition(0, 14);
+                Console.ForegroundColor = rainbowMode ? ConsoleColor.Magenta : ConsoleColor.Gray;
+                Console.Write($"Rainbow:    {(rainbowMode ? "BE " : "KI ")}");
 
-                // Kurzor pozicionálása és láthatóvá tétele
                 Console.SetCursorPosition(kurzorX, kurzorY);
                 Console.CursorVisible = true;
 
                 ConsoleKeyInfo gomb = Console.ReadKey(true);
-
-                // Ha a ceruza lent van, mozgás előtt/közben beírja a karaktert
-                if (ceruzaLent)
-                {
-                    Console.SetCursorPosition(kurzorX, kurzorY);
-                    Console.ForegroundColor = aktualisSzin;
-                    Console.Write(aktualisKarakter);
-                }
+                bool mozgott = false;
 
                 switch (gomb.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if (kurzorY > RajzlapKezdoY) kurzorY--;
+                        if (kurzorY > RajzlapKezdoY) { kurzorY--; mozgott = true; }
                         break;
                     case ConsoleKey.DownArrow:
-                        if (kurzorY < RajzlapKezdoY + RajzlapMagassag - 1) kurzorY++;
+                        if (kurzorY < RajzlapKezdoY + RajzlapMagassag - 1) { kurzorY++; mozgott = true; }
                         break;
                     case ConsoleKey.LeftArrow:
-                        if (kurzorX > RajzlapKezdoX) kurzorX--;
+                        if (kurzorX > RajzlapKezdoX) { kurzorX--; mozgott = true; }
                         break;
                     case ConsoleKey.RightArrow:
-                        if (kurzorX < RajzlapKezdoX + RajzlapSzelesseg - 1) kurzorX++;
+                        if (kurzorX < RajzlapKezdoX + RajzlapSzelesseg - 1) { kurzorX++; mozgott = true; }
+                        break;
+                    case ConsoleKey.R:
+                        rainbowMode = !rainbowMode;
                         break;
                     case ConsoleKey.Spacebar:
-                        ceruzaLent = !ceruzaLent; // Állapot váltás (fel / le)
+                        ceruzaLent = !ceruzaLent;
                         if (ceruzaLent)
                         {
                             Console.SetCursorPosition(kurzorX, kurzorY);
-                            Console.ForegroundColor = aktualisSzin;
+                            Console.ForegroundColor = RajzSzinLekerdezese();
                             Console.Write(aktualisKarakter);
                         }
                         break;
                     case ConsoleKey.Escape:
                         Console.CursorVisible = false;
+                        Console.SetCursorPosition(0, 14);
+                        Console.Write("Fel/Le: választás ");
                         Console.SetCursorPosition(0, 16);
-                        Console.Write(new string(' ', 50));
-                        return; // Kilépés a főmenübe
+                        Console.Write(new string(' ', 55));
+                        return;
+                }
+
+                if (ceruzaLent && mozgott)
+                {
+                    Console.SetCursorPosition(kurzorX, kurzorY);
+                    Console.ForegroundColor = RajzSzinLekerdezese();
+                    Console.Write(aktualisKarakter);
                 }
             }
+        }
+
+        static ConsoleColor RajzSzinLekerdezese()
+        {
+            if (!rainbowMode)
+            {
+                return aktualisSzin;
+            }
+
+            ConsoleColor valasztott = szivarvanySzinek[szinIdx];
+            szinIdx = (szinIdx + 1) % szivarvanySzinek.Length;
+            return valasztott;
         }
     }
 }
