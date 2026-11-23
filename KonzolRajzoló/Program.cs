@@ -32,9 +32,11 @@ namespace KonzolosRajzolo
             ConsoleColor.Magenta
         };
 
-        // aktuális rajzkarakter és szín
+        // aktuális rajzkarakter, szín és kurzorpozíció
         static char aktualisKarakter = '#';
         static ConsoleColor aktualisSzin = ConsoleColor.White;
+        static int kurzorX = RajzlapKezdoX;
+        static int kurzorY = RajzlapKezdoY;
 
         static int kivalasztottMenuIdx = 0;
 
@@ -64,12 +66,7 @@ namespace KonzolosRajzolo
 
             while (fut)
             {
-                Console.SetCursorPosition(0, 10);
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write($"Karakter: {aktualisKarakter}   ");
-                Console.SetCursorPosition(0, 11);
-                Console.Write($"Szín: {aktualisSzin}      ");
-
+                AllapotKirajzolasa(false, false, false);
                 MenuKirajzolasa();
 
                 ConsoleKeyInfo bekertBillentyu = Console.ReadKey(true);
@@ -95,22 +92,18 @@ namespace KonzolosRajzolo
                     case ConsoleKey.Enter:
                         if (kivalasztottMenuIdx == 0)
                         {
-                            Console.SetCursorPosition(0, 16);
                             aktualisKarakter = KarakterValasztasa();
                         }
                         else if (kivalasztottMenuIdx == 1)
                         {
-                            Console.SetCursorPosition(0, 16);
                             aktualisSzin = SzinValasztasa();
                         }
                         else if (kivalasztottMenuIdx == 2)
                         {
-                            Console.SetCursorPosition(0, 16);
-                            MintaBetoltese(RajzlapKezdoX, RajzlapKezdoY);
+                            MintaBetoltese(kurzorX, kurzorY);
                         }
                         else if (kivalasztottMenuIdx == 3)
                         {
-                            Console.SetCursorPosition(0, 16);
                             SzabadkeziRajzolas();
                         }
                         else if (kivalasztottMenuIdx == menuPontok.Length - 1)
@@ -123,6 +116,54 @@ namespace KonzolosRajzolo
 
             Console.ResetColor();
             Console.Clear();
+        }
+
+        static void AllapotKirajzolasa(bool rajzolasMod, bool ceruzaLent, bool radirMod)
+        {
+            int relX = kurzorX - RajzlapKezdoX;
+            int relY = kurzorY - RajzlapKezdoY;
+            ConsoleColor lathatoSzin = rainbowMode ? szivarvanySzinek[szinIdx] : aktualisSzin;
+
+            Console.SetCursorPosition(0, 9);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write($"Karakter: {aktualisKarakter}           ");
+
+            Console.SetCursorPosition(0, 10);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("Szín:     ");
+            Console.ForegroundColor = lathatoSzin;
+            Console.Write($"{lathatoSzin,-15}");
+
+            Console.SetCursorPosition(0, 11);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"Pozíció:  X:{relX,2} Y:{relY,2}      ");
+
+            if (rajzolasMod)
+            {
+                Console.SetCursorPosition(0, 13);
+                Console.ForegroundColor = ceruzaLent ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.Write($"Eszköz:   {(ceruzaLent ? "LETÉVE         " : "FELEMELVE      ")}");
+
+                Console.SetCursorPosition(0, 14);
+                Console.ForegroundColor = rainbowMode ? ConsoleColor.Magenta : ConsoleColor.Gray;
+                Console.Write($"Rainbow:  {(rainbowMode ? "BE            " : "KI            ")}");
+
+                Console.SetCursorPosition(0, 15);
+                Console.ForegroundColor = radirMod ? ConsoleColor.Yellow : ConsoleColor.Gray;
+                Console.Write($"Radír:    {(radirMod ? "BE            " : "KI            ")}");
+            }
+            else
+            {
+                Console.SetCursorPosition(0, 13);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("Fel/Le: választás       ");
+
+                Console.SetCursorPosition(0, 14);
+                Console.Write("Enter: megnyitás       ");
+
+                Console.SetCursorPosition(0, 15);
+                Console.Write(new string(' ', 26));
+            }
         }
 
         static void TeljesKepernyoRajzolasa()
@@ -149,11 +190,6 @@ namespace KonzolosRajzolo
 
             Console.SetCursorPosition(RajzlapKezdoX - 1, RajzlapKezdoY + RajzlapMagassag);
             Console.Write("+" + new string('-', RajzlapSzelesseg) + "+");
-
-            Console.SetCursorPosition(0, 13);
-            Console.Write("Fel/Le: választás");
-            Console.SetCursorPosition(0, 14);
-            Console.Write("Enter: megnyitás");
         }
 
         static void MenuKirajzolasa()
@@ -206,6 +242,8 @@ namespace KonzolosRajzolo
 
         static ConsoleColor SzinValasztasa()
         {
+            rainbowMode = false;
+
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("1:Feh 2:Pir 3:Zöl        ");
@@ -252,7 +290,6 @@ namespace KonzolosRajzolo
 
         static void MintaBetoltese(int celX, int celY)
         {
-            Console.CursorVisible = false;
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Fájlnév (pl. minta.txt):   ");
@@ -459,8 +496,6 @@ namespace KonzolosRajzolo
 
         static void SzabadkeziRajzolas()
         {
-            int kurzorX = RajzlapKezdoX;
-            int kurzorY = RajzlapKezdoY;
             bool ceruzaLent = false;
             bool radirMod = false;
 
@@ -468,25 +503,11 @@ namespace KonzolosRajzolo
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Nyilak=Mozg, Space=Fel/Le");
             Console.SetCursorPosition(0, 17);
-            Console.Write("R=Rain, C=Rad, L=Mint, F1-12");
+            Console.Write("R=Rain, C=Rad, F1-12, Esc ");
 
             while (true)
             {
-                int relX = kurzorX - RajzlapKezdoX;
-                int relY = kurzorY - RajzlapKezdoY;
-
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.SetCursorPosition(0, 10);
-                Console.Write($"Koordináta: X:{relX,2} Y:{relY,2}");
-                Console.SetCursorPosition(0, 13);
-                Console.ForegroundColor = ceruzaLent ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.Write($"Eszköz:     {(ceruzaLent ? "LETÉVE   " : "FELEMELVE")}");
-                Console.SetCursorPosition(0, 14);
-                Console.ForegroundColor = rainbowMode ? ConsoleColor.Magenta : ConsoleColor.Gray;
-                Console.Write($"Rainbow:    {(rainbowMode ? "BE      " : "KI      ")}");
-                Console.SetCursorPosition(0, 15);
-                Console.ForegroundColor = radirMod ? ConsoleColor.Yellow : ConsoleColor.Gray;
-                Console.Write($"Radír:      {(radirMod ? "BE      " : "KI      ")}");
+                AllapotKirajzolasa(true, ceruzaLent, radirMod);
 
                 Console.SetCursorPosition(kurzorX, kurzorY);
                 Console.CursorVisible = true;
@@ -517,14 +538,6 @@ namespace KonzolosRajzolo
                         break;
                     case ConsoleKey.C:
                         radirMod = !radirMod;
-                        break;
-                    case ConsoleKey.L:
-                        MintaBetoltese(kurzorX, kurzorY);
-                        Console.SetCursorPosition(0, 16);
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("Nyilak=Mozg, Space=Fel/Le");
-                        Console.SetCursorPosition(0, 17);
-                        Console.Write("R=Rain, C=Rad, L=Mint, F1-12");
                         break;
                     case ConsoleKey.F1:
                     case ConsoleKey.F2:
@@ -559,10 +572,6 @@ namespace KonzolosRajzolo
                         break;
                     case ConsoleKey.Escape:
                         Console.CursorVisible = false;
-                        Console.SetCursorPosition(0, 14);
-                        Console.Write("Fel/Le: választás       ");
-                        Console.SetCursorPosition(0, 15);
-                        Console.Write(new string(' ', 27));
                         Console.SetCursorPosition(0, 16);
                         Console.Write(new string(' ', 27));
                         Console.SetCursorPosition(0, 17);
