@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace KonzolosRajzolo
 {
@@ -105,7 +106,7 @@ namespace KonzolosRajzolo
                         else if (kivalasztottMenuIdx == 2)
                         {
                             Console.SetCursorPosition(0, 16);
-                            MintaBetoltese();
+                            MintaBetoltese(RajzlapKezdoX, RajzlapKezdoY);
                         }
                         else if (kivalasztottMenuIdx == 3)
                         {
@@ -194,7 +195,7 @@ namespace KonzolosRajzolo
             }
             else
             {
-                Console.Beep();
+                Console.Beep(400, 120);
                 Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("Érvénytelen karakter!      ");
@@ -242,15 +243,16 @@ namespace KonzolosRajzolo
                     Console.Write("Szín: Sárga                ");
                     return ConsoleColor.Yellow;
                 default:
-                    Console.Beep();
+                    Console.Beep(400, 120);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("Érvénytelen szín választás!");
                     return aktualisSzin;
             }
         }
 
-        static void MintaBetoltese()
+        static void MintaBetoltese(int celX, int celY)
         {
+            Console.CursorVisible = false;
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Fájlnév (pl. minta.txt):   ");
@@ -266,32 +268,37 @@ namespace KonzolosRajzolo
             Console.Write(new string(' ', 27));
             Console.SetCursorPosition(0, 16);
 
-            if (System.IO.File.Exists(fajlNev))
+            if (!string.IsNullOrWhiteSpace(fajlNev) && File.Exists(fajlNev))
             {
                 try
                 {
-                    string[] sorok = System.IO.File.ReadAllLines(fajlNev);
+                    string[] sorok = File.ReadAllLines(fajlNev);
+                    int maxSor = Math.Min(sorok.Length, RajzlapKezdoY + RajzlapMagassag - celY);
 
-                    for (int y = 0; y < sorok.Length && y < RajzlapMagassag; y++)
+                    for (int y = 0; y < maxSor; y++)
                     {
-                        Console.SetCursorPosition(RajzlapKezdoX, RajzlapKezdoY + y);
-
                         string sor = sorok[y];
-                        if (sor.Length > RajzlapSzelesseg)
-                        {
-                            sor = sor.Substring(0, RajzlapSzelesseg);
-                        }
+                        int maxOszlop = Math.Min(sor.Length, RajzlapKezdoX + RajzlapSzelesseg - celX);
 
-                        Console.ForegroundColor = aktualisSzin;
-                        Console.Write(sor);
+                        for (int x = 0; x < maxOszlop; x++)
+                        {
+                            char ch = sor[x];
+                            if (ch != ' ')
+                            {
+                                Console.SetCursorPosition(celX + x, celY + y);
+                                Console.ForegroundColor = RajzSzinLekerdezese();
+                                Console.Write(ch);
+                            }
+                        }
                     }
+
                     Console.SetCursorPosition(0, 16);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write($"Betöltve: {sorok.Length} sor          ");
                 }
                 catch (Exception)
                 {
-                    Console.Beep();
+                    Console.Beep(400, 120);
                     Console.SetCursorPosition(0, 16);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("Hiba a fájl olvasásakor!  ");
@@ -299,10 +306,154 @@ namespace KonzolosRajzolo
             }
             else
             {
-                Console.Beep();
+                Console.Beep(400, 120);
                 Console.SetCursorPosition(0, 16);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("A fájl nem található!      ");
+            }
+        }
+
+        static string[] NyomdaMintaLekerdezese(ConsoleKey gomb)
+        {
+            switch (gomb)
+            {
+                case ConsoleKey.F1:
+                    return new[]
+                    {
+                        "#####",
+                        "#   #",
+                        "#   #",
+                        "#   #",
+                        "#####"
+                    };
+                case ConsoleKey.F2:
+                    return new[]
+                    {
+                        "#########",
+                        "#       #",
+                        "#       #",
+                        "#       #",
+                        "#########"
+                    };
+                case ConsoleKey.F3:
+                    return new[]
+                    {
+                        "####",
+                        "####",
+                        "####",
+                        "####"
+                    };
+                case ConsoleKey.F4:
+                    return new[]
+                    {
+                        "    #    ",
+                        "   # #   ",
+                        "  #   #  ",
+                        " #     # ",
+                        "#########"
+                    };
+                case ConsoleKey.F5:
+                    return new[]
+                    {
+                        "  #  ",
+                        " # # ",
+                        "#   #",
+                        " # # ",
+                        "  #  "
+                    };
+                case ConsoleKey.F6:
+                    return new[]
+                    {
+                        "  #  ",
+                        "  #  ",
+                        "#####",
+                        "  #  ",
+                        "  #  "
+                    };
+                case ConsoleKey.F7:
+                    return new[]
+                    {
+                        "#   #",
+                        " # # ",
+                        "  #  ",
+                        " # # ",
+                        "#   #"
+                    };
+                case ConsoleKey.F8:
+                    return new[]
+                    {
+                        "#    ",
+                        "##   ",
+                        "###  ",
+                        "#### ",
+                        "#####"
+                    };
+                case ConsoleKey.F9:
+                    return new[]
+                    {
+                        "  #  ",
+                        "   # ",
+                        "#####",
+                        "   # ",
+                        "  #  "
+                    };
+                case ConsoleKey.F10:
+                    return new[]
+                    {
+                        " ## ## ",
+                        "#######",
+                        "#######",
+                        " ##### ",
+                        "  ###  ",
+                        "   #   "
+                    };
+                case ConsoleKey.F11:
+                    return new[]
+                    {
+                        "  #  ",
+                        " #.# ",
+                        "#.#.#",
+                        " #.# ",
+                        "  #  "
+                    };
+                case ConsoleKey.F12:
+                    return new[]
+                    {
+                        "+-----+",
+                        "|     |",
+                        "|  *  |",
+                        "|     |",
+                        "+-----+"
+                    };
+                default:
+                    return null;
+            }
+        }
+
+        static void BelyegzoKirajzolasa(ConsoleKey gomb, int celX, int celY)
+        {
+            string[] minta = NyomdaMintaLekerdezese(gomb);
+            if (minta == null)
+            {
+                return;
+            }
+
+            int maxSor = Math.Min(minta.Length, RajzlapKezdoY + RajzlapMagassag - celY);
+
+            for (int y = 0; y < maxSor; y++)
+            {
+                string sor = minta[y];
+                int maxOszlop = Math.Min(sor.Length, RajzlapKezdoX + RajzlapSzelesseg - celX);
+
+                for (int x = 0; x < maxOszlop; x++)
+                {
+                    if (sor[x] != ' ')
+                    {
+                        Console.SetCursorPosition(celX + x, celY + y);
+                        Console.ForegroundColor = RajzSzinLekerdezese();
+                        Console.Write(aktualisKarakter);
+                    }
+                }
             }
         }
 
@@ -311,12 +462,13 @@ namespace KonzolosRajzolo
             int kurzorX = RajzlapKezdoX;
             int kurzorY = RajzlapKezdoY;
             bool ceruzaLent = false;
+            bool radirMod = false;
 
             Console.SetCursorPosition(0, 16);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Nyilak=Mozg, Space=Fel/Le");
             Console.SetCursorPosition(0, 17);
-            Console.Write("R=Rainbow,   Esc=Kilép   ");
+            Console.Write("R=Rain, C=Rad, L=Mint, F1-12");
 
             while (true)
             {
@@ -332,6 +484,9 @@ namespace KonzolosRajzolo
                 Console.SetCursorPosition(0, 14);
                 Console.ForegroundColor = rainbowMode ? ConsoleColor.Magenta : ConsoleColor.Gray;
                 Console.Write($"Rainbow:    {(rainbowMode ? "BE      " : "KI      ")}");
+                Console.SetCursorPosition(0, 15);
+                Console.ForegroundColor = radirMod ? ConsoleColor.Yellow : ConsoleColor.Gray;
+                Console.Write($"Radír:      {(radirMod ? "BE      " : "KI      ")}");
 
                 Console.SetCursorPosition(kurzorX, kurzorY);
                 Console.CursorVisible = true;
@@ -343,32 +498,71 @@ namespace KonzolosRajzolo
                 {
                     case ConsoleKey.UpArrow:
                         if (kurzorY > RajzlapKezdoY) { kurzorY--; mozgott = true; }
+                        else Console.Beep(400, 120);
                         break;
                     case ConsoleKey.DownArrow:
                         if (kurzorY < RajzlapKezdoY + RajzlapMagassag - 1) { kurzorY++; mozgott = true; }
+                        else Console.Beep(400, 120);
                         break;
                     case ConsoleKey.LeftArrow:
                         if (kurzorX > RajzlapKezdoX) { kurzorX--; mozgott = true; }
+                        else Console.Beep(400, 120);
                         break;
                     case ConsoleKey.RightArrow:
                         if (kurzorX < RajzlapKezdoX + RajzlapSzelesseg - 1) { kurzorX++; mozgott = true; }
+                        else Console.Beep(400, 120);
                         break;
                     case ConsoleKey.R:
                         rainbowMode = !rainbowMode;
+                        break;
+                    case ConsoleKey.C:
+                        radirMod = !radirMod;
+                        break;
+                    case ConsoleKey.L:
+                        MintaBetoltese(kurzorX, kurzorY);
+                        Console.SetCursorPosition(0, 16);
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("Nyilak=Mozg, Space=Fel/Le");
+                        Console.SetCursorPosition(0, 17);
+                        Console.Write("R=Rain, C=Rad, L=Mint, F1-12");
+                        break;
+                    case ConsoleKey.F1:
+                    case ConsoleKey.F2:
+                    case ConsoleKey.F3:
+                    case ConsoleKey.F4:
+                    case ConsoleKey.F5:
+                    case ConsoleKey.F6:
+                    case ConsoleKey.F7:
+                    case ConsoleKey.F8:
+                    case ConsoleKey.F9:
+                    case ConsoleKey.F10:
+                    case ConsoleKey.F11:
+                    case ConsoleKey.F12:
+                        BelyegzoKirajzolasa(gomb.Key, kurzorX, kurzorY);
                         break;
                     case ConsoleKey.Spacebar:
                         ceruzaLent = !ceruzaLent;
                         if (ceruzaLent)
                         {
                             Console.SetCursorPosition(kurzorX, kurzorY);
-                            Console.ForegroundColor = RajzSzinLekerdezese();
-                            Console.Write(aktualisKarakter);
+                            if (radirMod)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Black;
+                                Console.Write(' ');
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = RajzSzinLekerdezese();
+                                Console.Write(aktualisKarakter);
+                            }
                         }
                         break;
                     case ConsoleKey.Escape:
                         Console.CursorVisible = false;
                         Console.SetCursorPosition(0, 14);
                         Console.Write("Fel/Le: választás       ");
+                        Console.SetCursorPosition(0, 15);
+                        Console.Write(new string(' ', 27));
                         Console.SetCursorPosition(0, 16);
                         Console.Write(new string(' ', 27));
                         Console.SetCursorPosition(0, 17);
@@ -379,8 +573,16 @@ namespace KonzolosRajzolo
                 if (ceruzaLent && mozgott)
                 {
                     Console.SetCursorPosition(kurzorX, kurzorY);
-                    Console.ForegroundColor = RajzSzinLekerdezese();
-                    Console.Write(aktualisKarakter);
+                    if (radirMod)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write(' ');
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = RajzSzinLekerdezese();
+                        Console.Write(aktualisKarakter);
+                    }
                 }
             }
         }
